@@ -1,0 +1,25 @@
+.App {
+  text-align: center;
+}
+
+h1 {
+  padding: 0.5em;
+}
+
+.header {
+  background-color: lightgray;
+  line-height: 3em;
+  border-bottom: 1px solid black;
+}
+
+.nav-bar {
+  background-color: lightgray;
+  /* height: 100vh; */
+  width: 15%;
+  float: left;
+}
+
+.nav-item {
+  line-height: 3em;
+  border-bottom: 1px solid black;
+}

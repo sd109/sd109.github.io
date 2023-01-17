@@ -1,0 +1,44 @@
+
+.tetris-game {
+    height: 87vh;
+    margin: 3vh;
+    border: 2px solid black;
+    border-radius: 3px;
+    align-items: center;
+}
+
+.tetris-score {
+    position: absolute;
+    top: 28px;
+    left: 75px;
+}
+
+.tetris-pause-menu {
+    height: 50vh;
+    width: 25%;
+    margin: auto;
+    position: absolute;
+    top: 20vh;
+}
+
+.btn-play {
+    margin: auto;
+    width: 15%;
+}
+
+.btn-close {
+    width: 2em;
+    height: 2em;
+    background-color: red;
+    opacity: 1;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+}
+
+.tetris-board {
+    width: 90%;
+    height: 80%;
+    margin: auto;
+    /* border: 2px solid black; */
+}
