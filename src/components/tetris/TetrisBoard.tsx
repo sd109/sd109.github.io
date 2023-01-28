@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import { Table } from "react-bootstrap";
 import { can_move_horizontally, is_block_mobile, move_block, try_rotate } from "./game_logic";
 import { TetrisPauseMenu, TetrisGameOverMenu } from "./TetrisMenu";
@@ -22,26 +22,29 @@ export function TetrisBoard(props: BoardProps) {
 
     // Listen for keyboard input by adding an event listener on first render
     // then use it to update position of activeBlock
-    useEffect(() => {
-        document.body.addEventListener('keydown', (event) => {
-            if (event.key == "Escape") {
-                paused.current = !paused.current;
-                // Trigger re-render to remove pause menu 
-                // - is there a better way to achieve this?
-                setActiveBlock(current => ({...current}));
-            } else if (!paused.current) {
-                setActiveBlock(current => {
-                    if (event.key === " ") {
-                        // Use space bar for 90 degree rotations
-                        try_rotate(current, Math.PI/2, fixedBlocks.current, n_cols);
-                    } else if (can_move_horizontally(current, event.key, fixedBlocks.current, n_rows, n_cols)) {
-                        // Use arrow keys for movement if not obstructed
-                        move_block(current, event.key)
-                    }
-                    return {...current, coords: current.coords}
-                })}
-            }
-        )},
+    const handleKeypress = useCallback((event: KeyboardEvent) => {
+        if (event.key == "Escape") {
+            paused.current = !paused.current;
+            // Trigger re-render to remove pause menu 
+            // - is there a better way to achieve this?
+            setActiveBlock(current => ({...current}));
+        } else if (!paused.current) {
+            setActiveBlock(current => {
+                if (event.key === " ") {
+                    // Use space bar for 90 degree rotations
+                    try_rotate(current, Math.PI/2, fixedBlocks.current, n_cols);
+                } else if (can_move_horizontally(current, event.key, fixedBlocks.current, n_rows, n_cols)) {
+                    // Use arrow keys for movement if not obstructed
+                    move_block(current, event.key)
+                }
+                return {...current, coords: current.coords}
+            })}
+        },
+        []
+    )
+
+    useEffect(
+        () => {document.body.addEventListener('keydown', handleKeypress)},
         [n_rows, n_cols]
     )
 
@@ -79,6 +82,7 @@ export function TetrisBoard(props: BoardProps) {
     // board height and end game if so
     fixedBlocks.current.map(block => {
         if (!gameOver && block.coords.some(c => c.y >= n_rows-1)) {
+            document.body.removeEventListener('keydown', handleKeypress);
             clearInterval(timerID.current)
             setGameOver(true);
         }
